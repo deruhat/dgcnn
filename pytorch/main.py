@@ -150,15 +150,15 @@ def test(args, io):
     count = 0.0
     test_true = []
     test_pred = []
-    for data, label in test_loader:
-
-        data, label = data.to(device), label.to(device).squeeze()
-        data = data.permute(0, 2, 1)
-        batch_size = data.size()[0]
-        logits = model(data)
-        preds = logits.max(dim=1)[1]
-        test_true.append(label.cpu().numpy())
-        test_pred.append(preds.detach().cpu().numpy())
+    with torch.no_grad():
+        for data, label in test_loader:
+            data, label = data.to(device), label.to(device).squeeze()
+            data = data.permute(0, 2, 1)
+            batch_size = data.size()[0]
+            logits = model(data)
+            preds = logits.max(dim=1)[1]
+            test_true.append(label.cpu().numpy())
+            test_pred.append(preds.detach().cpu().numpy())
     test_true = np.concatenate(test_true)
     test_pred = np.concatenate(test_pred)
     test_acc = metrics.accuracy_score(test_true, test_pred)
@@ -177,7 +177,7 @@ if __name__ == "__main__":
                         help='Model to use, [pointnet, dgcnn]')
     parser.add_argument('--dataset', type=str, default='modelnet40', metavar='N',
                         choices=['modelnet40'])
-    parser.add_argument('--batch_size', type=int, default=32, metavar='batch_size',
+    parser.add_argument('--batch_size', type=int, default=16, metavar='batch_size',
                         help='Size of batch)')
     parser.add_argument('--test_batch_size', type=int, default=16, metavar='batch_size',
                         help='Size of batch)')
