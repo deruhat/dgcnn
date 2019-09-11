@@ -119,6 +119,9 @@ class DGCNN(nn.Module):
         self.conv4 = nn.Sequential(nn.Conv2d(128*2, 256, kernel_size=1, bias=False),
                                    self.bn4,
                                    nn.LeakyReLU(negative_slope=0.2))
+
+        #self.pool1 = nn.MaxPool2d(kernel_size=2)
+
         self.conv5 = nn.Sequential(nn.Conv2d(256*2, 256, kernel_size=1, bias=False),
                                    self.bn5,
                                    nn.LeakyReLU(negative_slope=0.2))
@@ -131,6 +134,9 @@ class DGCNN(nn.Module):
         self.conv8 = nn.Sequential(nn.Conv2d(256*2, 512, kernel_size=1, bias=False),
                                    self.bn8,
                                    nn.LeakyReLU(negative_slope=0.2))
+
+        #self.pool2 = nn.MaxPool2d(kernel_size=2)
+
         self.conv9 = nn.Sequential(nn.Conv2d(512*2, 512, kernel_size=1, bias=False),
                                    self.bn9,
                                    nn.LeakyReLU(negative_slope=0.2))
@@ -143,6 +149,9 @@ class DGCNN(nn.Module):
         self.conv12 = nn.Sequential(nn.Conv2d(512*2, args.emb_dims, kernel_size=1, bias=False),
                                    self.bn12,
                                    nn.LeakyReLU(negative_slope=0.2))
+
+        #self.pool3 = nn.MaxPool2d(kernel_size=2)
+        
         self.conv13 = nn.Sequential(nn.Conv2d(args.emb_dims*2, args.emb_dims, kernel_size=1, bias=False),
                                    self.bn13,
                                    nn.LeakyReLU(negative_slope=0.2))
@@ -181,9 +190,10 @@ class DGCNN(nn.Module):
         
         x = get_graph_feature(x3, k=self.k)
         x = self.conv4(x)
+        #x = self.pool1(x)
         x4 = x.max(dim=-1, keepdim=False)[0]
         #x4 = x + x4
-        
+
         x = get_graph_feature(x4, k=self.k)
         x = self.conv5(x)
         x5 = x.max(dim=-1, keepdim=False)[0]
@@ -201,9 +211,10 @@ class DGCNN(nn.Module):
         
         x = get_graph_feature(x7, k=self.k)
         x = self.conv8(x)
+        #x = self.pool2(x)
         x8 = x.max(dim=-1, keepdim=False)[0]
         #x8 = x + x8
-        
+
         x = get_graph_feature(x8, k=self.k)
         x = self.conv9(x)
         x9 = x.max(dim=-1, keepdim=False)[0]
@@ -221,6 +232,7 @@ class DGCNN(nn.Module):
         
         x = get_graph_feature(x11, k=self.k)
         x = self.conv12(x)
+        #x = self.pool3(x)
         x12 = x.max(dim=-1, keepdim=False)[0]
         #x12 = x + x12
         
@@ -234,6 +246,21 @@ class DGCNN(nn.Module):
         x14 = x.max(dim=-1, keepdim=False)[0]
         x14 = x13 + x14
         
+        """ print(x1.shape)
+        print(x2.shape)
+        print(x3.shape)
+        print(x4.shape)
+        print(x5.shape)
+        print(x6.shape)
+        print(x7.shape)
+        print(x8.shape)
+        print(x9.shape)
+        print(x10.shape)
+        print(x11.shape)
+        print(x12.shape)
+        print(x13.shape)
+        print(x14.shape) """
+
         x = torch.cat((x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14), dim=1)
 
         x = self.conv15(x)
