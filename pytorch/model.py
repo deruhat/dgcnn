@@ -116,13 +116,13 @@ class DGCNN(nn.Module):
         self.bn20 = nn.BatchNorm2d(args.emb_dims)
         self.bn21 = nn.BatchNorm2d(args.emb_dims)
         self.bn22 = nn.BatchNorm2d(args.emb_dims)
-        self.bn23 = nn.BatchNorm1d(args.emb_dims)
+        self.bn23 = nn.BatchNorm2d(args.emb_dims)
         self.bn24 = nn.BatchNorm2d(args.emb_dims)
         self.bn25 = nn.BatchNorm2d(args.emb_dims)
         self.bn26 = nn.BatchNorm2d(args.emb_dims)
-        self.bn27 = nn.BatchNorm1d(args.emb_dims)
-        self.bn28 = nn.BatchNorm1d(args.emb_dims)
-        self.bn28 = nn.BatchNorm1d(args.emb_dims)
+        self.bn27 = nn.BatchNorm2d(args.emb_dims)
+        self.bn28 = nn.BatchNorm2d(args.emb_dims)
+        self.bn28 = nn.BatchNorm2d(args.emb_dims)
         self.bn29 = nn.BatchNorm1d(args.emb_dims)
 
         self.conv1 = nn.Sequential(nn.Conv2d(6, 64, kernel_size=1, bias=False),
@@ -311,7 +311,7 @@ class DGCNN(nn.Module):
         x = get_graph_feature(x16, k=self.k)
         x = self.conv17(x)
         x17 = x.max(dim=-1, keepdim=False)[0]
-        x17 = x15 + x17
+        x17 = x16 + x17
 
         x = get_graph_feature(x17, k=self.k)
         x = self.conv18(x)
